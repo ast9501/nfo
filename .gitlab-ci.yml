@@ -1,0 +1,107 @@
+# This file is a template, and might need editing before it works on your project.
+# This is a sample GitLab CI/CD configuration file that should run without any modifications.
+# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
+# it uses echo commands to simulate the pipeline execution.
+#
+# A pipeline is composed of independent jobs that run scripts, grouped into stages.
+# Stages run in sequential order, but jobs within stages run in parallel.
+#
+# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
+#
+# You can copy and paste this template into a new `.gitlab-ci.yml` file.
+# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
+#
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - helm-publish
+  - test
+  - deploy
+
+include:
+  - remote: "https://api.r2devops.io/job/r/r2devops-bot/docker_build/2.0.0.yaml"
+  #- template: Code-Quality.gitlab-ci.yml
+
+docker_build:
+  stage: build
+  variables:
+    COMMIT_CREATE_LATEST: 'true'
+#build-job:
+#  stage: build
+#  image:
+#    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+#    entrypoint: [""]
+#  script:
+#    - /kaniko/executor
+#      --context "${CI_PROJECT_DIR}"
+#      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+#      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+      #--destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}"
+  #rules:
+  #  - if: $CI_COMMIT_TAG
+
+helm-package:
+  stage: helm-publish
+  image:
+    name: alpine/helm:3.10.2
+    entrypoint: [""]
+    #tags: 
+    #- minikube    
+  variables:
+    CHART: example-chart
+    HELM_CHART_ROOT: helm
+  before_script:
+    - apk add git
+    - helm plugin install --version=v0.10.3 https://github.com/chartmuseum/helm-push.git
+    - >
+      helm repo add ${CHART}
+      --username ${CI_REGISTRY_USER}
+      --password ${CI_REGISTRY_PASSWORD}
+      ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable
+  script:
+    - helm repo update
+    - helm repo list
+    - helm package ${HELM_CHART_ROOT}/${CHART}
+    - helm cm-push ${CHART}*.tgz ${CHART}
+  only:
+    refs:
+      - main
+    #changes:
+    #  - .gitlab-ci.yaml
+    #  - helm/**/*
+
+unit-test-job:   # This job runs in the test stage.
+  stage: test   # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "No defined tests, skip in 3 sec"
+    - sleep 3
+
+lint:
+  image: registry.gitlab.com/gitlab-org/gitlab-build-images:golangci-lint-alpine
+  stage: test
+  script:
+    # Use default .golangci.yml file from the image if one is not present in the project root.
+    - '[ -e .golangci.yml ] || cp /golangci/.golangci.yml .'
+    # Write the code coverage report to gl-code-quality-report.json
+    # and print linting issues to stdout in the format: path/to/file:line description
+    # remove `--issues-exit-code 0` or set to non-zero to fail the job if linting issues are detected
+    - golangci-lint run --issues-exit-code 0 --out-format code-climate,json:gl-code-quality-report.json,checkstyle:gl-code-quality-report.xml
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+      junit: gl-code-quality-report.xml
+
+    paths:
+      - gl-code-quality-report.json
+      - gl-code-quality-report.xml
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
