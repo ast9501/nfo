@@ -15,9 +15,9 @@ RUN mkdir -p config/TLS
 COPY --from=builder /go/app/config/TLS config/TLS
 
 # copy config
-COPY --from=builder /go/app/config/nssmf.env config/
+COPY --from=builder /go/app/config/nfo.env config/
 
 # copy exec
 COPY --from=builder /go/app/bin /app/
 
-CMD ["./nssmf", "-c", "config"]
+CMD ["./nfo", "-c", "config"]

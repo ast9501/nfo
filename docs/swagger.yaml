@@ -2,14 +2,14 @@ info:
   contact:
     email: ast9501.cs10@nycu.edu.tw
     name: ast9501
-  description: winlab O-RAN NSSMF
+  description: winlab O-RAN NFO
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: O-RAN NSSMF api doc
+  title: O-RAN NFO api doc
   version: "1.0"
 paths:
-  /nssmf/v1/:
+  /nfo/v1/:
     get:
       description: health check for api server
       responses:

@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/ast9501/nssmf/internal/service/management"
-	"github.com/ast9501/nssmf/pkg/logger"
+	"github.com/ast9501/nfo/internal/service/management"
+	"github.com/ast9501/nfo/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	swaggerFiles "github.com/swaggo/files"
@@ -18,11 +18,11 @@ type Config struct {
 	DMAAPReadTopic  string `mapstructure:"DMAAP_READ_TOPIC"`
 	Cert            string `mapstructure:"TLS_CERT"`
 	Key             string `mapstructure:"TLS_KEY"`
-	Addr            string `mapstructure:"NSSMF_BIND_ADDR"`
-	Port            string `mapstructure:"NSSMF_BIND_PORT"`
+	Addr            string `mapstructure:"NFO_BIND_ADDR"`
+	Port            string `mapstructure:"NFO_BIND_PORT"`
 }
 
-type NSSMF struct {
+type NFO struct {
 	Config Config
 }
 
@@ -33,23 +33,23 @@ var cliCmd = []cli.Flag{
 	},
 }
 
-func (*NSSMF) GetCliCmd() (flags []cli.Flag) {
+func (*NFO) GetCliCmd() (flags []cli.Flag) {
 	return cliCmd
 }
 
-func (nssmf *NSSMF) Initialize(configPath string) {
-	nssmf.LoadConfig(configPath)
+func (nfo *NFO) Initialize(configPath string) {
+	nfo.LoadConfig(configPath)
 
 	// derive cert path
-	nssmf.Config.Cert = configPath + "/" + nssmf.Config.Cert
-	nssmf.Config.Key = configPath + "/" + nssmf.Config.Key
+	nfo.Config.Cert = configPath + "/" + nfo.Config.Cert
+	nfo.Config.Key = configPath + "/" + nfo.Config.Key
 
 	// derive port binding
-	nssmf.Config.Port = ":" + nssmf.Config.Port
+	nfo.Config.Port = ":" + nfo.Config.Port
 }
 
 // schemes http
-func (nssmf *NSSMF) Start(certPath string, keyPath string) {
+func (nfo *NFO) Start(certPath string, keyPath string) {
 	// TODO: external function call for customize gin engine loger
 	router := gin.Default()
 
@@ -60,12 +60,12 @@ func (nssmf *NSSMF) Start(certPath string, keyPath string) {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// TODO: Load server binding port from conifg
-	router.RunTLS(nssmf.Config.Port, certPath, keyPath)
+	router.RunTLS(nfo.Config.Port, certPath, keyPath)
 }
 
-func (n *NSSMF) LoadConfig(path string) (config Config, err error) {
+func (n *NFO) LoadConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("nssmf")
+	viper.SetConfigName("nfo")
 	viper.SetConfigType("env")
 
 	viper.AutomaticEnv()

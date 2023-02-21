@@ -3,7 +3,7 @@ package management
 import (
 	"net/http"
 
-	"github.com/ast9501/nssmf/pkg/logger"
+	"github.com/ast9501/nfo/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +24,7 @@ type Routes []Route
 
 // Register service to router
 func AddService(engine *gin.Engine) *gin.RouterGroup {
-	group := engine.Group("/nssmf/v1")
+	group := engine.Group("/nfo/v1")
 
 	for _, route := range routes {
 		switch route.Method {
@@ -47,7 +47,7 @@ func AddService(engine *gin.Engine) *gin.RouterGroup {
 // @Summary		root path
 // @Description	health check for api server
 // @Success		200
-// @Router		/nssmf/v1/ [get]
+// @Router		/nfo/v1/ [get]
 func Index(C *gin.Context) {
 	C.String(http.StatusOK, "Hello User!")
 	logger.HandlerLog.Infoln("Receive Health Check Request From: ", C.ClientIP())

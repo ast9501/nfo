@@ -26,9 +26,9 @@ func init() {
 		FieldsOrder:     []string{"component", "category"},
 	}
 
-	InitLog = log.WithFields(logrus.Fields{"component": "RAN NSSMF", "category": "Init"})
-	AppLog = log.WithFields(logrus.Fields{"component": "RAN NSSMF", "category": "App"})
-	HandlerLog = log.WithFields(logrus.Fields{"component": "RAN NSSMF", "category": "Hdlr"})
+	InitLog = log.WithFields(logrus.Fields{"component": "RAN NFO", "category": "Init"})
+	AppLog = log.WithFields(logrus.Fields{"component": "RAN NFO", "category": "App"})
+	HandlerLog = log.WithFields(logrus.Fields{"component": "RAN NFO", "category": "Hdlr"})
 
 	InitLog.Info("Logger init")
 	AppLog.Info("Get loglevel setting from env var (LogLevel = WARN|DEBUG|INFO)")

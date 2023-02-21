@@ -9,11 +9,11 @@ ST  = Taiwan
 L   = Hsinchu
 O   = NYCU
 OU  = winlab
-CN  = nssmf.winlab.nycu
+CN  = nfo.winlab.nycu
 
 [req_ext]
 subjectAltName = @alt_names
 
 [alt_names]
 IP.1 = 192.168.0.166
-DNS.1 = nssmf.winlab.nycu
+DNS.1 = nfo.winlab.nycu

@@ -1,4 +1,4 @@
-module github.com/ast9501/nssmf
+module github.com/ast9501/nfo
 
 go 1.19
 

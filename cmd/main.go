@@ -6,17 +6,17 @@ import (
 	"net"
 	"os"
 
-	"github.com/ast9501/nssmf/docs"
-	"github.com/ast9501/nssmf/pkg/logger"
-	nssmf_service "github.com/ast9501/nssmf/pkg/service"
+	"github.com/ast9501/nfo/docs"
+	"github.com/ast9501/nfo/pkg/logger"
+	nfo_service "github.com/ast9501/nfo/pkg/service"
 	"github.com/urfave/cli/v2"
 )
 
-var NSSMF = &nssmf_service.NSSMF{}
+var NFO = &nfo_service.NFO{}
 
-//	@title			O-RAN NSSMF api doc
+//	@title			O-RAN NFO api doc
 //	@version		1.0
-//	@description	winlab O-RAN NSSMF
+//	@description	winlab O-RAN NFO
 
 //	@contact.name	ast9501
 //	@contact.email	ast9501.cs10@nycu.edu.tw
@@ -27,17 +27,17 @@ var NSSMF = &nssmf_service.NSSMF{}
 // schemes http
 func main() {
 	app := cli.NewApp()
-	app.Name = "nssmf"
-	app.Usage = "3GPP NSSMF function for O-RAN"
+	app.Name = "nfo"
+	app.Usage = "3GPP NFO function for O-RAN"
 	app.Action = action
-	app.Flags = NSSMF.GetCliCmd()
+	app.Flags = NFO.GetCliCmd()
 
 	if err := app.Run(os.Args); err != nil {
 		// TODO: Add logger printer
-		logger.InitLog.Errorf("NSSMF Run Error: %v\n", err)
+		logger.InitLog.Errorf("NFO Run Error: %v\n", err)
 	}
 	// generate host ip dynamicly for api doc
-	docs.SwaggerInfo.Host = NSSMF.Config.Addr + NSSMF.Config.Port
+	docs.SwaggerInfo.Host = NFO.Config.Addr + NFO.Config.Port
 	logger.InitLog.Debugln("Generate swagger api doc target server location: ", docs.SwaggerInfo.Host)
 
 }
@@ -48,9 +48,9 @@ func action(c *cli.Context) error {
 		return nil
 	}
 	// TODO: Add log: print config file path
-	NSSMF.Initialize(c.String("c"))
+	NFO.Initialize(c.String("c"))
 
-	NSSMF.Start(NSSMF.Config.Cert, NSSMF.Config.Key)
+	NFO.Start(NFO.Config.Cert, NFO.Config.Key)
 
 	return nil
 }

@@ -1,4 +1,4 @@
-# RAN NSSMF
+# RAN nfo
 
 ## Usage
 ### Build app
@@ -7,16 +7,16 @@
 make all
 ```
 
-### Run nssmf
+### Run nfo
 ```
-./nssmf -c config
+./nfo -c config
 ```
 - `-c`: path of config directory
 
 ### Test
 * Health check
 ```
-curl https://<IP>:<port>/nssmf/v1/
+curl https://<IP>:<port>/nfo/v1/
 ```
 
 ## Support

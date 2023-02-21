@@ -22,7 +22,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/nssmf/v1/": {
+        "/nfo/v1/": {
             "get": {
                 "description": "health check for api server",
                 "summary": "root path",
@@ -42,8 +42,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "O-RAN NSSMF api doc",
-	Description:      "winlab O-RAN NSSMF",
+	Title:            "O-RAN NFO api doc",
+	Description:      "winlab O-RAN NFO",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

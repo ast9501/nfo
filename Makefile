@@ -7,7 +7,7 @@ generate-api-doc:
 	swag init -g $(SOURCE)/main.go
 
 build-app:
-	go build -o $(INSTDIR)/nssmf $(SOURCE)/main.go
+	go build -o $(INSTDIR)/nfo $(SOURCE)/main.go
 
 clean:
 	rm -rf bin
